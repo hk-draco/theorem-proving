@@ -1,0 +1,33 @@
+
+
+theorim (x: NotNeg(LessOne(R))) {
+	type n->x^n: Converge(0)
+proof:
+	target all
+	unfd n >= n_0 -> dist(0, x^n) < eps
+	step eps <= dist(0, x^n) -> n < n_0
+	target left
+	step eps <= x^n
+}
+
+
+type Disverge extends Seq {
+	forall n: N
+	forall M: R
+	exists n_0[M]: N
+	n >= n_0 -> $(n) > M
+name:
+	"発散する"
+}
+
+theorim {
+	(n->n).Disverge
+proof:
+	target all
+	unfd n >= n_0 -> n > M
+	step n <= M -> n < n_0
+	target left
+	impl n < M + 1
+	impl n < n_0
+}
+

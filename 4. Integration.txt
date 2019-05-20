@@ -1,0 +1,52 @@
+
+type SubNat<a: T, b: T>
+    => x: Nat where a <= x & x <= v
+    
+type Pair(a: A, b: B): Pair<A, B>
+
+
+type Sequence(n: Nat, f: SubNat(1, n)->T): Sequence<n>
+    
+def StrictlyMonotonicIncreasing[f: R->R] {
+    forall x, y: R
+    x < y -> f(x) < f(y)	
+}
+
+def Partition[f: StrictlyMonotonicIncreasing](a: R, b: R, n: N) {
+    a = f(0) & b = f(n)
+}
+
+
+# TaggedPartition = (a, b, n: N) -> (p: Partition(a, b, n), s: NSub(a, b)->R) -> Prop
+
+def TaggedPartition(a, b, n: N)[p: Partition(a, b, n), s: NSub(a, b)->R] {
+    forall i: NSub(a, b)
+    f(i) <= t(i) & t(i) <= f(i+1)
+}
+
+def VectorTaggedPartition<m: Nat, p: Partition<a, b, n>, s: SubNat<a, b>->Real>
+    extends SubNat<1, m>->TaggedPartition<p, s>
+    
+def RiemannSum(f: R->R, tp: TaggedPartition(a, b, n)) {
+    sum(n, 1, k -> f(tp.p(k))*(tp.s(k+1)-tp.s(k) )
+}
+    
+def RiemannIntegral(s: SubReal<a, b>, f: RiemannIntegrable) {
+    let splitter = n -> k -> a + (b - a) * k / n
+    lim(n -> RiemannSum(f, TaggedPartition(splitter(n), splitter(n)))
+}
+
+
+def PowerSeries(f: Seq, a: ) {
+    z -> sum(n->f(n)*(z-a)^n)
+}
+
+theorim {
+    PowerSeries(f, a) * PowerSeries(g, a) => PowerSeries(f + g, a)
+proof:
+
+}
+
+theorim {
+    PowerSeries(f, a) * PowerSeries(g, a) => PowerSeries(n->sum(f*g), a)
+}

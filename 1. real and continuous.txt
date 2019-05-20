@@ -1,0 +1,509 @@
+
+# 1. 実数
+undef add: (R, R)->R
+undef div: (R, R)->R
+undef mul: (R, R)->R
+undef sub: (R, R)->R
+
+undef inv(a: R): R
+undef mns(a: R): R
+
+undef 0: R
+undef 1: R
+
+axiom (a, b: R) {
+	a + b = b + a
+}
+
+axiom (a, b, c: R) {
+	a + (b + c) = (a + b) + c
+}
+
+axiom (a: R) {
+	a + 0 => a
+}
+
+axiom (a, b: R) {
+	a * b = b * a
+}
+
+axiom (a, b, c: R) {
+	a * (b * c) = (a * b) * c
+}
+
+axiom (a: R) {
+	a * 1 => a
+}
+
+axiom (a: R) {
+	a + mns(a) => 0
+}
+
+axiom (a: R) {
+	a * inv(a) => 1
+}
+
+undef equals: (R, R)->R
+undef less: (R, R)->R
+undef larger: (R, R)->R
+undef lesse: (R, R)->R
+undef largere: (R, R)->R
+
+# 反射律
+axiom (a: R) {
+	a <= a => True
+}
+
+# 推移律
+axiom (a, b: R) { 
+	a <= b & b <= a => a = b
+}
+
+axiom (a, b, c: R) { 
+	a <= b & b <= c -> a <= c
+}
+
+axiom (a, b: R) { 
+	a <= b | b <= a => True
+}
+
+axiom (a, b, c: R) {
+	a + c <= b + c -> a <= b 
+}
+
+axiom (a, b: R) {
+	a >= 0 & b >= 0 -> a * b >= 0
+}
+
+# 19p
+def Max(A: where R)[x: A] {
+	forall a: A
+	a <= x
+name:
+	"$Aの最大元"
+}
+
+def Min(A: where R)[x: A] {
+	forall a: A
+	x <= a
+name:
+	"$Aの最小元"
+}
+
+theorim <A: where R>(a, b: Max(A)) {
+	a = b
+proof:
+	target a.Max(A) & b.Max(A)
+	unfold b <= a & a <= b
+	step a = b
+}
+
+def max(a, b: R): R {
+
+}
+
+# 19p (1.6) Rには最大元、最小元は存在しない
+theorim {
+	forall x: R
+	~x.Max(R)
+proof:
+	unfold ~(a <= x)
+	exists s, t: R
+	step s < t
+}
+
+# 19p 絶対値の定義
+def abs(a: R) {
+	a >= 0 ? a : -a
+}
+
+# 19p (1.8)
+theorim (a: R) {
+	abs(-a) => abs(a)
+}
+
+# 19p (1.9)
+theorim (a: R) {
+	abs(-a) <= a
+}
+
+theorim (a: R) {
+	a <= abs(a)
+}
+
+# 定義1
+type UpperBound(A: where R)[x: A] { 
+	forall a: R
+	x <= a
+name:
+	"$Aの上界"
+}
+
+type LowerBound(A: where R)[a: A] { 
+	forall x: R
+	x <= a
+name:
+	"$Aの下界"
+}
+
+# 21p (1.10)
+theorim <A: where R>(b: UpperBound(A), c: A) {
+	b <= c -> c.UpperBound(A)
+proof:
+	fork {
+		target left
+	}
+	fork {
+		target b.UpperBound(A)
+		unfold x <= b
+	}
+	step x <= b & b <= c
+	impl x <= c
+	step c.UpperBound(A)
+}
+
+theorim <A: where R>(b: LowerBound(A), c: A) {
+	c <= b -> c.LowerBound(A)
+proof:
+	fork {
+		target left
+	}
+	fork {
+		target b.LowerBound(A)
+		unfold b <= x
+	}
+	step c <= b & b <= x
+	impl c <= x
+	step c.LowerBound(A)
+}
+
+theorim (m: R, A: where R) {
+	forall a: A
+	exists b: A
+	m.Sup(A) <-> a <= m & (x < m -> x < b)
+proof:
+	unfold m.Min(UpperBound(A))
+	forall a: UpperBound(A)
+	step m <= a
+}
+
+# 21p 定義 2
+def Sup<A: where R>[x: Min(UpperBound(A))] {
+}
+
+def Inf<A: where R>[x: Max(LowerBound(A))] {
+}
+
+# 21p 命題1.3系
+theorim (A: where R, x: R) {
+	x.Max(A) -> x.Sup(A)
+proof:
+	unfold a <= x
+	
+}
+
+theorim (A: where R, x: R) {
+	x.Min(A) -> x.Inf(A)
+proof:
+
+}
+
+# 22p (R 17) 連続の公理
+axiom {
+	exists s: R
+	s.Sup(A)
+}
+
+
+type BoundedAbove(A: Type(R)) extends A {
+	exists Max($)
+name:
+	"上に有界な集合"
+}
+
+type BoundedBelow(A: Type(R)) extends A {
+	exists Min($)
+name:
+	"下に有界な集合"
+}
+
+type Bounded(A: Type) extends BoundedAbove(A) & BoundedBelow(A) {
+name:
+	"有界な集合"
+}
+
+
+def inf(A: Type): A {
+	suchone InfOf(A)
+}
+
+def sup(A: Type): A {
+	suchone SupOf(A)
+}
+
+# 最大・最小
+theorim (A: NotEmpty(A), B: NotEmpty(BoundedAbove(B))) {
+	contains(A, B) -> BoundedAbove(A)
+}
+
+theorim (A: NotEmpty(BoundedAbove(A)), B: NotEmpty(BoundedAbove(B))) {
+	contains(A, B) -> sup(A) <= sup(B)
+}
+
+theorim (A: NotEmpty(A), B: NotEmpty(BoundedAbove(B))) {
+	contains(A, B) => BoundedBelow(A)
+}
+
+theorim (A: NotEmpty(BoundedBelow(A)), B: NotEmpty(BoundedBelow(B))) {
+	contains(A, B) -> inf(A) <= inf(B)
+}
+
+
+# 絶対値
+theorim (a, b, x: R) [
+	dist(a, b) < x -> abs(a) - abs(b) < x
+]
+
+def dist(a, b: R) {
+	abs(a - b)
+}
+
+theorim (a: R) {
+	abs(-a) => abs(a)
+proof:
+	step max(-a, --a)
+	step max(-a, a)
+	step abs(a)
+}
+
+theorim (a, b: R) {
+	dist(a, b) = dist(b, a)
+proof:
+	step abs(a - b)
+	step abs(-(a - b))
+	step abs(b - a)
+	step dist(b, a)
+}
+
+theorim (a, b: R) {
+	dist(a, b) / abs(a * b) => dist(1 / a, 1 / b)
+proof:
+	step abs(a - b) / abs(a * b)
+	step abs((a - b) / (a * b))
+	step abs(1 / b - 1 / a)
+	step dist(1 / b, 1 / a)
+	step dist(1 / a, 1 / b)
+}
+
+# 2. 実数列の極限
+def N[x: R]: Prop {
+	x = 0 | (x - 1).N
+}
+
+
+def Converge[f: Seq](a: R) {
+	forall eps: PosR
+	exists n_0[eps]: N 
+	forall n: N
+	n >= n_0 -> dist(a, f(n)) < eps
+}
+
+# 29p 定理2.5 (1)
+theorim <a, b: R>(f: Converge(a) | g: Converge(b)) { 
+	type n->f[n]+g[n]: Converge(a + b)
+proof:
+	exists n_0[eps]: N
+	context n >= n_1 -> dist(a, f(n)) < eps & n >= n_2 -> dist(b, g(n)) < eps
+	impl where {
+		step n >= n_1 & n >= n_2
+		impl n >= max(n_1, n_2)
+		impl n >= n_0
+	} when {
+		step dist(a, f(n)) < eps & dist(b, g(n)) < eps
+		impl dist(a+b, f(n)+g(n)) < eps
+	}
+}
+
+# 29p 定理2.5 (2)
+theorim <a, b: R>(f: Converge(a) | g: Converge(b)) {
+	type n->f[n]*g[n]: Converge(a * b)
+proof:
+	let M = max(max(f, g))
+	context f.Converge(a) & g.Converge(b)
+	unfold n >= n_1 -> dist(a, f(n)) < eps/(2*M) & n >= n_2 -> dist(b, g(n)) < eps/(2*abs(a)+1)
+	impl when n >= n_1 & n >= n_2 {
+		start dist(a, f(n)) < eps/(2*M) & dist(b, g(n)) < eps/(2*abs(a)+1)
+		impl dist(a*b, f(n)*g(n)) <= abs(a*(b-g(n))) + abs(g(n)*(a-f(n)))
+		step dist(a*b, f(n)*g(n)) <= abs(a)*dist(b, g(n)) + abs(g(n))*dist(a, f(n))
+		step dist(a*b, f(n)*g(n)) <= eps
+	}
+}
+
+# 29p 定理2.5 (3) 補題
+theorim (f: Converge(a)) {
+	type n->1/f[n]: Converge(1/a)
+proof:
+	forall eps: Pos(R)
+	target f.Converge(a)
+	fork unfold when n >= n_1 {
+		start dist(a, f(n)) < eps2
+		impl dist(a, f(n)) < eps * abs(a)^2 / 2
+		step 2 * dist(a, f(n)) / abs(a)^2 < eps
+	}
+	fork unfold when n >= n_2 {
+		start dist(a, f(n)) < eps1
+		impl dist(a, f(n)) < abs(a) / 2
+		impl abs(a) - abs(f(n)) < abs(a) / 2
+		step abs(a) / abs(f(n)) / 2 < 1
+	}
+	impl when n >= max(n_1, n_2) {
+		start 2 * dist(a, f(n)) / abs(a)^2 < eps & abs(a) / abs(f(n)) / 2 < 1
+		impl 2 * dist(a, f(n)) / abs(a)^2 * abs(a) / abs(f(n)) / 2 < eps
+		step dist(a, f(n)) / abs(a) / abs(f(n)) < eps
+		impl dist(a, f(n)) / abs(a*f(n)) < eps
+		step dist(1/a, 1/f(n)) < eps
+	}
+	exists n_0[eps]: N
+	impl n >= n_0 -> dist(1/a, 1/f(n)) < eps
+}
+
+# 29p 定理2.5 (3)
+theorim (f: Converge(a) | g: Converge(b)) {
+	type n->f[n]/g[n]: Converge(a / b)
+proof:
+	step lim(n->f[n]*1/g[n])
+	step lim(f) * lim(n->1/g(n))
+	step lim(f) * 1 / lim(g)
+	step lim(f) / lim(g)
+}
+
+theorim {
+	type n->1/n: Converge(0)
+proof:
+	target all
+	unfd n >= n_0 -> dist(0, 1/n) < eps
+	step eps <= dist(0, 1/n) -> n < n_0
+	target left
+	step eps <= 1/n
+	step n <= 1/eps
+	impl n < 1/eps+1
+	impl n < n_0
+}
+
+# 34p 定理3.2
+theorim (a, b: PosR) {
+	exists n[a, b]: N
+	a < n * b
+name:
+	"アルキメデスの原理"
+desc:
+	"$bは数列(n$a)_{n\in\mathbb{N}}の上界ではない"
+proof:
+	step n > b / a
+}
+
+# 40p 定義5
+def CauchySeq[f: Seq] {
+	forall eps: PosR | n, m: N
+	exists n_0[eps]: N
+	m >= n_0 & n >= n_0 -> dist(f(m), f(n)) < eps
+name:
+	"コーシー列" | "基本列"
+}
+
+# 40p 命題3.5 (1) コーシー列は有界である
+theorim (f: Seq) {
+	f.CauchySeq -> f.Bounded
+proof:
+	unfold m >= n_1 & n >= n_1 -> dist(f(m), f(n)) < eps
+	when m >= n_1 & n >= n_1 {
+		impl dist(f(m), f(n)) < 1
+		step -1 < f(n) - f(m) < 1
+		step f(m) - 1 < f(n) < f(m) + 1
+		impl f(n_1) - 1 < f(n) < f(n_1) + 1
+	}
+	impl n >= n_1 -> f(n_1) - 1 < f(n) < f(n_1) + 1
+}
+
+def partSeq(f: Seq, g: MonoIncrease) {
+	func(n: N){ f(g(n)) }
+}
+
+# 40p 命題3.5 (2)
+theorim (f: CauchySeq, g: MonoIncrease) {
+	partSeq(f, g).Converge -> f.Converge
+proof:
+	step f.CauchySeq
+	unfold n >= n_0 & m >= n_0 -> dist(f(n), f(m)) < eps / 2
+	step k >= n_0 & g(k) >= n_0 -> dist(f(k), f(g(k))) < eps / 2
+	impl k >= n_0 -> dist(f(k), f(g(k))) < eps / 2 
+}
+
+# 41p 定理3.6 実数列が収束するための必要十分条件は、コーシー列となることである
+theorim (f: Seq) {
+	f.Converge <-> f.CauchySeq
+proof(->):
+	unfold n >= n_0 -> dist(a, f(n)) < eps
+	forall m: N
+	step n >= n_0 -> dist(a, f(n)) < eps & m >= n_0 -> dist(a, f(n)) < eps
+	when n >= n_0 & m >= n_0 {
+		impl dist(a, f(n)) < eps & dist(m, f(m)) < eps
+		impl dist(a, f(n)) + dist(m, f(m)) < eps
+		impl dist(f(n), f(m)) < eps
+	}
+	step f.CauchySeq
+proof(<-):
+	step f.CauchySeq
+	impl f.Bounded
+	exists g: Bounded
+	impl PartSeq(f, g).Converge
+	step f.Converge
+}
+
+# 44p 定理3.7 任意の実数xについて[x]が存在する
+theorim RtoN(a: R) {
+	existsone n: N
+	n <= a & a < n + 1
+proof:
+	target gen
+	unfold m * b > a
+	impl m * (-1) > a
+	step m > -a
+	step 0 < m + a
+	let l: R = m + a + 1
+	step l - 1 <= m + a < l
+	step l - m - 1 <= a < l - m
+	let t: R = l - m - 1
+	step t <= a < t + 1
+	exists n: N
+	impl n <= a < n + 1
+}
+
+def Q[x: R] {
+	exists a: R | b: NotZeroR
+	x = a / b
+}
+
+# 44p 定理3.8 3.8 任意の2つの実数a, b(a<b)に対してa<x<bを満たす有理数xが存在する
+theorim (a, b: R) {
+	exists x: Q
+	a < b -> a < x < b
+proof:
+	fork {
+		target left
+		impl m * (b - a) > 1
+		step m * a + 1 < m * b
+	}
+	fork {
+		target NtoR(m * a)
+		unfold n - 1 <= m * a & m * a < n
+	}
+	where m * a + 1 < m * b & $ & m * a < n {
+		step n - 1 <= m * a
+		step n <= m * a + 1
+	}
+	impl m * a < n & n <= m * b
+	step a < n / m & n / m * b
+	exists x: Q
+	impl a < x & x < b
+}

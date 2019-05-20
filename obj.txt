@@ -1,0 +1,62 @@
+
+
+
+
+class R {
+    R operator + (R right) {
+        add(this, right)
+    }
+}
+
+class Limit<a: R> extends R {
+    Limit(src: R) : R(src) {}
+
+    Limit operator + <b: int>(Limit<b> right) {
+        Limit<a + b>(a + b)
+    }
+}
+
+
+class Add extends R {
+    field a, b: R
+
+    convert (a = 0) {
+        return b
+    }
+
+    convert (b = 0) {
+        return a
+    } 
+}
+
+
+class Less extends R {
+    field a, b: R
+
+    convert {
+        LessOne(a - b)
+    }
+}
+
+
+
+class LessOne {
+
+}
+
+alisa Converge = exists(a: R).Converge(a)
+
+theorim <a, b: R>(f: Converge(a) | g: Converge(b)) { 
+	type n->f[n]+g[n]: Converge(a + b)
+proof:
+	exists n_0[eps]: N
+	context n >= n_1 -> dist(a, f(n)) < eps & n >= n_2 -> dist(b, g(n)) < eps
+	impl where {
+		step n >= n_1 & n >= n_2
+		impl n >= max(n_1, n_2)
+		impl n >= n_0
+	} when {
+		step dist(a, f(n)) < eps & dist(b, g(n)) < eps
+		impl dist(a+b, f(n)+g(n)) < eps
+	}
+}

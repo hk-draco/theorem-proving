@@ -1,0 +1,45 @@
+
+def ConvergePointSeq(n, a) extends PointSeq(n) {
+	forall eps: Pos(R) | m: N
+	exists n_0[eps]: N
+	m >= n_0 -> dist($(m), a) < eps
+}
+
+theorim (a: ConvergePointSeq(n) | b: RVec(n)) {
+	forall k: NSub(1, n)
+	a(m)(k).Converge(n(k))
+proof:
+	
+}
+
+def sum(a: Seq, n: N): R {
+	match n {
+		0 => 0,
+		1 => a(1),
+		_ => sum(a, n-1) + a(n)
+	}
+}
+
+def sum(a: Seq): Seq {
+	n->sum(a, n)
+}
+
+type SumConverge(s: R) extends Seq {
+	sum($).Converge(s)
+}
+
+def sumInf(a: Seq) {
+	lim(sum(a))
+}
+
+type SumConverge(s: R) extends Seq {
+	sum($).Converge
+}
+
+theorim (a: SumConverge(s), b: SumConverge(t)) { 
+	sumInf(n->a[n]+b[n]) => s + t
+proof:
+	target context
+	impl sum(a).Converge(s) & sum(b).Converge(t)
+	step sum(n->a[n]+b[n]).Converge(s + t)
+}

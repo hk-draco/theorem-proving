@@ -1,0 +1,23 @@
+inter Coe(n: N, a: R) extends R->R {
+	x->a*x^n
+	match {
+		x => 1*x^1
+		x^n => 1*x^n,
+		a => a*x^0,
+		a*x => a*x^1
+	}
+}
+
+inter Poly(m: ListMap(N, R)) extends R->R {
+	x->Poly(t) + Coe(n, a) => t + {n: a}
+	match {
+		x->Coe(n, a) => x->Poly({}) + Coe(n, a)
+	}
+}
+
+inter NPoly(n: N, d: List(R)) extends R->R {
+	match {
+		Poly(m) => 
+	}
+}
+任意のデータ構造に解釈できる

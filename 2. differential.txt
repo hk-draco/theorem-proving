@@ -1,0 +1,150 @@
+def Limit<B: deriv(R) | n: N>[f: B->RVec(n)](a: R, b: R): Prop {
+    forall eps: PosR
+    exists delta[eps]: PosR
+    forall x: B
+    dist(x, a) < delta -> dist(f(x), b) < eps
+}
+
+theorim <n: N><a, b, c: RVec(n)>(f: Limit(a, b), g: Limit(a, c)) {
+    type x->f[x] + g(x): Limit(a, b + c)
+proof:
+    context f.Limit(a, b) & g.Limit(a, c)
+    unfold dist(x, a) < delta -> dist(f(x), b) < eps / 2 & dist(x, a) < delta -> dist(g(x), c) < eps / 2
+    impl when dist(x, a) < delta {
+        start dist(f(x), b) < eps / 2 & dist(g(x), c) < eps / 2
+        step dist(f(x), b) + dist(g(x), c) < eps
+        impl dist(f(x) + g(x), b + c) < eps
+    }
+}
+
+theorim <a, b, c: RVec(n)>(f: Limit(a, b)) {
+    type x->k * f[x]: Limit(a, k * b)
+proof:
+    context f.Limit(a, b)
+    unfold when dist(x, a) < delta {
+        start dist(f(x), b) < eps / abs(k)
+        unfold abs(f(x)) - abs(b) < eps / abs(k)
+        step abs(k) * abs(f(x)) - abs(k) * abs(b) < eps
+        impl dist(k * f(x), k * b) < eps
+    }
+}
+
+theorim <n: NSub(1, 2)><a, b, c: RVec(n)>(f: Limit(a, b)) {
+    type x->f[x] * g[x]: Limit(a, b * c)
+}
+
+theorim <n: NSub(1, 2)><a, b, c: RVec(n)>(f: Limit(a, b), g: Limit(a, c)) {
+    type x->f[x] / g[x]: Limit(a, b / c)
+}
+
+def Continuous<B: deriv(R) | n: N>[f: B->RVec(n)](a: R) {
+    type f: Limit(a, f(a))
+}
+
+type RVec(n) 
+
+def U<n: N>[x: RVec(n)](a: RVec(n) | eps: PosR) {
+    dist(a, x) < eps
+
+    dist(Infty, x) < eps
+name:
+    "$aを中心とする半径$epsの開球"
+    "$aの$eps近傍"
+}
+
+def U() {
+
+}
+
+
+def Differential<a, b: R | n: N>[f: RSub(a, b)->RVec(n)](t, c: RVec(n)) {
+	type h->(f(t+h)-f(t))/h: Limit(0, c)
+}
+
+syntax suger {
+    def Differential<a, b: R | n: N>[f: RSub(a, b)->RVec(n)](t, c: RVec(n)) {
+        (h->(f(t+h)-f(t))/h).Limit(0, c)
+    }
+    theorim <t, c: RVec(n)>(f: Differential(t, c)) {
+        (h->(f(t+h)-f(t))/h).Limit(0, c)
+    }
+}
+
+def Diffable[f: R->RVec(n)] {
+    exists c: RVec(n)
+    f.Differential(t, c)
+}
+
+theorim (: ) {
+    (h->f(t+h)).Limit(0, f(t)) => f.Limit(t, f(t))
+proof:
+    unfold dist(x, 0) < delta -> dist(f(t+x), f(t)) < eps
+    let s := x - t
+    step dist(s, t) < delta -> dist(f(s), f(t)) < eps
+}
+
+lim(frac(f(t+h) - f(t), h)) = c
+
+theorim (f: Diffable(t)) {
+    f.Continuous(t)
+proof:
+    context f: Diffable(t)
+    unfold f.Differential(t, c)
+    let delta: Limit(0, 0) = h -> frac(f(t+h) - f(t), h) - c
+    step (h->h * c + delta(h)).Limit(0, 0)
+    rewrite h * c + h * delta(h) => f(t+h) - f(t) {
+        step (h->f(t+h) - f(t)).Limit(0, 0)
+    }
+    step (h->f(t+h)).Limit(0, f(t))
+    step f.Limit(t, f(t))
+}
+
+
+
+
+type Kyokudaia(a: R) extends R->R {
+    forall eps: R
+    a.$ & $(a).MaxOf(U(a, eps))
+}
+
+type Kyokusyou(a: R) extends R->R {
+    forall eps: R
+    a.$ & $(a).MinOf(U(a, eps))
+}
+
+
+
+theorim {
+	solve(x->Poly(m)=0) => set(x, r)
+}
+
+type Constant extends R->R {
+	forall a: R
+	forall b: R
+	$(a) = $(b)
+}
+
+theorim (a: R) {
+    type x->a: Constant
+proof:
+    forall s: R
+	forall t: R
+    step a = a
+    step (x->a)(s) = (x->a)(t)
+}
+
+theorim {
+	Differential(0) => Constant
+proof:
+	
+}
+
+theorim (f: R->R) {
+    exists c
+    f(a) = f(b) -> f.Differential(c, 0)
+name:
+    "ロールの定理"
+}
+
+set InftySet = {Infty, MnsInfty}
+def Rc = R | InftySet

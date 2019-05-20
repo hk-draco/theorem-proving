@@ -1,0 +1,31 @@
+
+def add<A: Type, n: N>(f, g: A->RVec(n)): A->RVec(n) {
+    fun(x: A) => f(x) + g(x)
+}
+
+def mul<A: Type, n: N>(c: RVec(n), f: A->RVec(n)): A->RVec(n) {
+    fun(x: A) { c * b(x) }
+}
+
+def mul<A: Type, n: NSub(1, 2)>(f, g: A->RVec(n)): A->RVec(n) {
+    fun(x: A) { f(x) * g(x) }
+}
+
+def NotZero<A: Type, n: N>[x: A](f: A->RVec(n)) {
+    f(x) != 0
+}
+
+theorim <A: Type, n: N> <f: A->RVec(n)> (x: NotZero(f)) {
+    type f(x): NotZeroRVec(n)
+proof:
+    context x.NotZero(f)
+    unfold f(x) != 0
+}
+
+def div<A: Type, n: NSub(1, 2)>(f, g: A->RVec(n)): NotZero(g)->RVec(n) {
+    fun(x: NotZero(g)) => f(x) / g(x)
+}
+
+def fusion<X, Y, Z: Type><Y': deriv(Y)>(f: X->Y' | g: Y->Z): X->Z {
+    fun(x: X) { f(g(x)) }
+}

@@ -1,0 +1,131 @@
+
+def equal(a: RVec(n), b: RVec(n)) {
+	forall i: NSub(1, N)
+	a(i) = b(i)
+}
+
+def add(a: RVec(n), b: RVec(n)) {
+	func(i: NSub(1, N)){ a(i) + b(i) }
+}
+
+def mul(a: RVec(n), b: RVec(n)) {
+	func(i: NSub(1, N)){ a(i) * b(i) }
+}
+
+def mns(a: RVec(n), b: RVec(n)) {
+	func(i: NSub(1, N)){ -a(i) }
+}
+
+theorim (a, b: R | x, y: RVec(n)) {
+	a * (x + y) = a * x + a * y
+proof:
+	fun(m: natSub(1, n)) => 
+		a*(x(m)+y(m))
+		a*x(m)+a*y(m)
+	a*x+a*y
+}
+
+theorim (a, b: R | x, y: RVec(n)) {
+	(a+b)*x = a*x+b*x
+proof:
+	where(fun(m: natSub(1, n)) => $) {
+		step (a+b)*(x(m))
+		step a*x(m)+b*x(m)
+	}
+	fun(t: natSub(1, n)) =>
+		(fun(m: natSub(1, n)) => a*x(m))(t)+(fun(m: natSub(1, n)) => b*x(m))(t)
+		(a*x)(t)+(b*x)(t)
+	a*x+b*x
+}
+
+theorim (a, b: R | x, y: RVec(n)) {
+	(a*b)*x = a*(b*x)
+proof:
+	(a*b)*x
+	fun(m: natSub(1, n)): 
+		(a*b)*x(m)
+		a*(b*x(m))
+	a*fun(m: natSub(1, n)): (b*x(m))
+	a*(b*x)	
+}
+
+theorim (a, b: R | x, y: RVec(n)) {
+	1*x=x
+proof:
+	fun(m: natSub(1, n)) => 
+		1*x(m)
+		x(m)
+	x
+}
+
+def dot(x: RVec(n), y: RVec(n)) {
+	sum(1, n, fun k: x(k)+y(k))
+}
+
+theorom (x, y: RVec(n)) {
+	dot(x, y) = dot(y, x)
+}
+
+theorom (x, y: RVec(n)) {
+	dot(x + y, z) = dot(x, z) + dot(y, z)
+}
+
+theorom (a: R | x, y: RVec(n)) {
+	dot(a * x, y) = a * dot(x, y)
+}
+
+theorom (x: RVec(n)) {
+	dot(x, x) >= 0
+}
+
+def abs(x: RVec(n)) {
+	sqrt(dot(x, x))
+}
+
+theorim (x, y: RVec(n)) {
+	abs(dot(x, y)) <= abs(x)*abs(y)
+}
+
+def dist(x, y: RVec(n)) {
+	abs(dot(x, y)) <= abs(x)*abs(y)
+name:
+	"シュワルツの不等式"
+}
+
+theorim (x, y: RVec(n)) {
+	dist(x, y) = dist(y, x)
+}
+
+theorim (x, y, z: RVec(n)) {
+	dist(x, z) <= dist(x, y) + dist(y, z)
+}
+
+theorim (x, y: RVec(n)) {
+	dist(x, y) >= 0
+}
+
+alisa PointSeq(n) = N->RVec(n) {
+}
+
+
+theorim (a: R | x, y: RVec(n)) {
+	abs(a * x) => abs(a) * abs(x)
+}
+
+theorim (x, y: RVec(n)) {
+	abs(x + y) <= abs(x) + abs(y)
+proof:
+	target all
+	step abs(x + y)^2 <= (abs(x) + abs(y))^2
+	step abs(x)^2 + 2*dot(x, y) + abs(y)^2 <= abs(x)^2 + 2*abs(x)*abs(y) + abs(y)^2
+	step dot(x, y) <= abs(x)*abs(y)
+	impl abs(dot(x, y)) <= abs(x)*abs(y)
+	step True
+}
+
+theorim (x, y: RVec(n)) {
+	abs(x) >= 0
+proof:
+	step dot(x, x) >= 0
+	step True
+}
