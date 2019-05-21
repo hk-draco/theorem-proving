@@ -90,7 +90,7 @@ name:
 	"$Aの最小元"
 }
 
-theorim <A: where R>(a, b: Max(A)) {
+theorem <A: where R>(a, b: Max(A)) {
 	a = b
 proof:
 	target a.Max(A) & b.Max(A)
@@ -103,7 +103,7 @@ def max(a, b: R): R {
 }
 
 # 19p (1.6) Rには最大元、最小元は存在しない
-theorim {
+theorem {
 	forall x: R
 	~x.Max(R)
 proof:
@@ -118,16 +118,16 @@ def abs(a: R) {
 }
 
 # 19p (1.8)
-theorim (a: R) {
+theorem (a: R) {
 	abs(-a) => abs(a)
 }
 
 # 19p (1.9)
-theorim (a: R) {
+theorem (a: R) {
 	abs(-a) <= a
 }
 
-theorim (a: R) {
+theorem (a: R) {
 	a <= abs(a)
 }
 
@@ -147,7 +147,7 @@ name:
 }
 
 # 21p (1.10)
-theorim <A: where R>(b: UpperBound(A), c: A) {
+theorem <A: where R>(b: UpperBound(A), c: A) {
 	b <= c -> c.UpperBound(A)
 proof:
 	fork {
@@ -162,7 +162,7 @@ proof:
 	step c.UpperBound(A)
 }
 
-theorim <A: where R>(b: LowerBound(A), c: A) {
+theorem <A: where R>(b: LowerBound(A), c: A) {
 	c <= b -> c.LowerBound(A)
 proof:
 	fork {
@@ -177,7 +177,7 @@ proof:
 	step c.LowerBound(A)
 }
 
-theorim (m: R, A: where R) {
+theorem (m: R, A: where R) {
 	forall a: A
 	exists b: A
 	m.Sup(A) <-> a <= m & (x < m -> x < b)
@@ -195,14 +195,14 @@ def Inf<A: where R>[x: Max(LowerBound(A))] {
 }
 
 # 21p 命題1.3系
-theorim (A: where R, x: R) {
+theorem (A: where R, x: R) {
 	x.Max(A) -> x.Sup(A)
 proof:
 	unfold a <= x
 	
 }
 
-theorim (A: where R, x: R) {
+theorem (A: where R, x: R) {
 	x.Min(A) -> x.Inf(A)
 proof:
 
@@ -242,25 +242,25 @@ def sup(A: Type): A {
 }
 
 # 最大・最小
-theorim (A: NotEmpty(A), B: NotEmpty(BoundedAbove(B))) {
+theorem (A: NotEmpty(A), B: NotEmpty(BoundedAbove(B))) {
 	contains(A, B) -> BoundedAbove(A)
 }
 
-theorim (A: NotEmpty(BoundedAbove(A)), B: NotEmpty(BoundedAbove(B))) {
+theorem (A: NotEmpty(BoundedAbove(A)), B: NotEmpty(BoundedAbove(B))) {
 	contains(A, B) -> sup(A) <= sup(B)
 }
 
-theorim (A: NotEmpty(A), B: NotEmpty(BoundedAbove(B))) {
+theorem (A: NotEmpty(A), B: NotEmpty(BoundedAbove(B))) {
 	contains(A, B) => BoundedBelow(A)
 }
 
-theorim (A: NotEmpty(BoundedBelow(A)), B: NotEmpty(BoundedBelow(B))) {
+theorem (A: NotEmpty(BoundedBelow(A)), B: NotEmpty(BoundedBelow(B))) {
 	contains(A, B) -> inf(A) <= inf(B)
 }
 
 
 # 絶対値
-theorim (a, b, x: R) [
+theorem (a, b, x: R) [
 	dist(a, b) < x -> abs(a) - abs(b) < x
 ]
 
@@ -268,7 +268,7 @@ def dist(a, b: R) {
 	abs(a - b)
 }
 
-theorim (a: R) {
+theorem (a: R) {
 	abs(-a) => abs(a)
 proof:
 	step max(-a, --a)
@@ -276,7 +276,7 @@ proof:
 	step abs(a)
 }
 
-theorim (a, b: R) {
+theorem (a, b: R) {
 	dist(a, b) = dist(b, a)
 proof:
 	step abs(a - b)
@@ -285,7 +285,7 @@ proof:
 	step dist(b, a)
 }
 
-theorim (a, b: R) {
+theorem (a, b: R) {
 	dist(a, b) / abs(a * b) => dist(1 / a, 1 / b)
 proof:
 	step abs(a - b) / abs(a * b)
@@ -309,7 +309,7 @@ def Converge[f: Seq](a: R) {
 }
 
 # 29p 定理2.5 (1)
-theorim <a, b: R>(f: Converge(a) | g: Converge(b)) { 
+theorem <a, b: R>(f: Converge(a) | g: Converge(b)) { 
 	type n->f[n]+g[n]: Converge(a + b)
 proof:
 	exists n_0[eps]: N
@@ -325,7 +325,7 @@ proof:
 }
 
 # 29p 定理2.5 (2)
-theorim <a, b: R>(f: Converge(a) | g: Converge(b)) {
+theorem <a, b: R>(f: Converge(a) | g: Converge(b)) {
 	type n->f[n]*g[n]: Converge(a * b)
 proof:
 	let M = max(max(f, g))
@@ -340,18 +340,18 @@ proof:
 }
 
 # 29p 定理2.5 (3) 補題
-theorim (f: Converge(a)) {
+theorem (f: Converge(a)) {
 	type n->1/f[n]: Converge(1/a)
 proof:
 	forall eps: Pos(R)
 	target f.Converge(a)
-	fork unfold when n >= n_1 {
-		start dist(a, f(n)) < eps2
+	fork unfold assume n >= n_1 {
+		begin dist(a, f(n)) < eps2
 		impl dist(a, f(n)) < eps * abs(a)^2 / 2
 		step 2 * dist(a, f(n)) / abs(a)^2 < eps
 	}
-	fork unfold when n >= n_2 {
-		start dist(a, f(n)) < eps1
+	fork unfold assume n >= n_2 {
+		begin dist(a, f(n)) < eps1
 		impl dist(a, f(n)) < abs(a) / 2
 		impl abs(a) - abs(f(n)) < abs(a) / 2
 		step abs(a) / abs(f(n)) / 2 < 1
@@ -368,7 +368,7 @@ proof:
 }
 
 # 29p 定理2.5 (3)
-theorim (f: Converge(a) | g: Converge(b)) {
+theorem (f: Converge(a) | g: Converge(b)) {
 	type n->f[n]/g[n]: Converge(a / b)
 proof:
 	step lim(n->f[n]*1/g[n])
@@ -377,7 +377,7 @@ proof:
 	step lim(f) / lim(g)
 }
 
-theorim {
+theorem {
 	type n->1/n: Converge(0)
 proof:
 	target all
@@ -391,7 +391,7 @@ proof:
 }
 
 # 34p 定理3.2
-theorim (a, b: PosR) {
+theorem (a, b: PosR) {
 	exists n[a, b]: N
 	a < n * b
 name:
@@ -412,7 +412,7 @@ name:
 }
 
 # 40p 命題3.5 (1) コーシー列は有界である
-theorim (f: Seq) {
+theorem (f: Seq) {
 	f.CauchySeq -> f.Bounded
 proof:
 	unfold m >= n_1 & n >= n_1 -> dist(f(m), f(n)) < eps
@@ -430,7 +430,7 @@ def partSeq(f: Seq, g: MonoIncrease) {
 }
 
 # 40p 命題3.5 (2)
-theorim (f: CauchySeq, g: MonoIncrease) {
+theorem (f: CauchySeq, g: MonoIncrease) {
 	partSeq(f, g).Converge -> f.Converge
 proof:
 	step f.CauchySeq
@@ -440,7 +440,7 @@ proof:
 }
 
 # 41p 定理3.6 実数列が収束するための必要十分条件は、コーシー列となることである
-theorim (f: Seq) {
+theorem (f: Seq) {
 	f.Converge <-> f.CauchySeq
 proof(->):
 	unfold n >= n_0 -> dist(a, f(n)) < eps
@@ -461,7 +461,7 @@ proof(<-):
 }
 
 # 44p 定理3.7 任意の実数xについて[x]が存在する
-theorim RtoN(a: R) {
+theorem RtoN(a: R) {
 	existsone n: N
 	n <= a & a < n + 1
 proof:
@@ -485,7 +485,7 @@ def Q[x: R] {
 }
 
 # 44p 定理3.8 3.8 任意の2つの実数a, b(a<b)に対してa<x<bを満たす有理数xが存在する
-theorim (a, b: R) {
+theorem (a, b: R) {
 	exists x: Q
 	a < b -> a < x < b
 proof:

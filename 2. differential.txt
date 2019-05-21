@@ -5,7 +5,7 @@ def Limit<B: deriv(R) | n: N>[f: B->RVec(n)](a: R, b: R): Prop {
     dist(x, a) < delta -> dist(f(x), b) < eps
 }
 
-theorim <n: N><a, b, c: RVec(n)>(f: Limit(a, b), g: Limit(a, c)) {
+theorem <n: N><a, b, c: RVec(n)>(f: Limit(a, b), g: Limit(a, c)) {
     type x->f[x] + g(x): Limit(a, b + c)
 proof:
     context f.Limit(a, b) & g.Limit(a, c)
@@ -17,7 +17,7 @@ proof:
     }
 }
 
-theorim <a, b, c: RVec(n)>(f: Limit(a, b)) {
+theorem <a, b, c: RVec(n)>(f: Limit(a, b)) {
     type x->k * f[x]: Limit(a, k * b)
 proof:
     context f.Limit(a, b)
@@ -29,11 +29,11 @@ proof:
     }
 }
 
-theorim <n: NSub(1, 2)><a, b, c: RVec(n)>(f: Limit(a, b)) {
+theorem <n: NSub(1, 2)><a, b, c: RVec(n)>(f: Limit(a, b)) {
     type x->f[x] * g[x]: Limit(a, b * c)
 }
 
-theorim <n: NSub(1, 2)><a, b, c: RVec(n)>(f: Limit(a, b), g: Limit(a, c)) {
+theorem <n: NSub(1, 2)><a, b, c: RVec(n)>(f: Limit(a, b), g: Limit(a, c)) {
     type x->f[x] / g[x]: Limit(a, b / c)
 }
 
@@ -65,7 +65,7 @@ syntax suger {
     def Differential<a, b: R | n: N>[f: RSub(a, b)->RVec(n)](t, c: RVec(n)) {
         (h->(f(t+h)-f(t))/h).Limit(0, c)
     }
-    theorim <t, c: RVec(n)>(f: Differential(t, c)) {
+    theorem <t, c: RVec(n)>(f: Differential(t, c)) {
         (h->(f(t+h)-f(t))/h).Limit(0, c)
     }
 }
@@ -75,7 +75,7 @@ def Diffable[f: R->RVec(n)] {
     f.Differential(t, c)
 }
 
-theorim (: ) {
+theorem (: ) {
     (h->f(t+h)).Limit(0, f(t)) => f.Limit(t, f(t))
 proof:
     unfold dist(x, 0) < delta -> dist(f(t+x), f(t)) < eps
@@ -85,7 +85,7 @@ proof:
 
 lim(frac(f(t+h) - f(t), h)) = c
 
-theorim (f: Diffable(t)) {
+theorem (f: Diffable(t)) {
     f.Continuous(t)
 proof:
     context f: Diffable(t)
@@ -114,7 +114,7 @@ type Kyokusyou(a: R) extends R->R {
 
 
 
-theorim {
+theorem {
 	solve(x->Poly(m)=0) => set(x, r)
 }
 
@@ -124,7 +124,7 @@ type Constant extends R->R {
 	$(a) = $(b)
 }
 
-theorim (a: R) {
+theorem (a: R) {
     type x->a: Constant
 proof:
     forall s: R
@@ -133,13 +133,13 @@ proof:
     step (x->a)(s) = (x->a)(t)
 }
 
-theorim {
+theorem {
 	Differential(0) => Constant
 proof:
 	
 }
 
-theorim (f: R->R) {
+theorem (f: R->R) {
     exists c
     f(a) = f(b) -> f.Differential(c, 0)
 name:

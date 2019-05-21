@@ -15,7 +15,7 @@ def NotZero<A: Type, n: N>[x: A](f: A->RVec(n)) {
     f(x) != 0
 }
 
-theorim <A: Type, n: N> <f: A->RVec(n)> (x: NotZero(f)) {
+theorem <A: Type, n: N> <f: A->RVec(n)> (x: NotZero(f)) {
     type f(x): NotZeroRVec(n)
 proof:
     context x.NotZero(f)

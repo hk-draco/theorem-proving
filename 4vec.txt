@@ -16,7 +16,7 @@ def mns(a: RVec(n), b: RVec(n)) {
 	func(i: NSub(1, N)){ -a(i) }
 }
 
-theorim (a, b: R | x, y: RVec(n)) {
+theorem (a, b: R | x, y: RVec(n)) {
 	a * (x + y) = a * x + a * y
 proof:
 	fun(m: natSub(1, n)) => 
@@ -25,7 +25,7 @@ proof:
 	a*x+a*y
 }
 
-theorim (a, b: R | x, y: RVec(n)) {
+theorem (a, b: R | x, y: RVec(n)) {
 	(a+b)*x = a*x+b*x
 proof:
 	where(fun(m: natSub(1, n)) => $) {
@@ -38,7 +38,7 @@ proof:
 	a*x+b*x
 }
 
-theorim (a, b: R | x, y: RVec(n)) {
+theorem (a, b: R | x, y: RVec(n)) {
 	(a*b)*x = a*(b*x)
 proof:
 	(a*b)*x
@@ -49,7 +49,7 @@ proof:
 	a*(b*x)	
 }
 
-theorim (a, b: R | x, y: RVec(n)) {
+theorem (a, b: R | x, y: RVec(n)) {
 	1*x=x
 proof:
 	fun(m: natSub(1, n)) => 
@@ -82,7 +82,7 @@ def abs(x: RVec(n)) {
 	sqrt(dot(x, x))
 }
 
-theorim (x, y: RVec(n)) {
+theorem (x, y: RVec(n)) {
 	abs(dot(x, y)) <= abs(x)*abs(y)
 }
 
@@ -92,15 +92,15 @@ name:
 	"シュワルツの不等式"
 }
 
-theorim (x, y: RVec(n)) {
+theorem (x, y: RVec(n)) {
 	dist(x, y) = dist(y, x)
 }
 
-theorim (x, y, z: RVec(n)) {
+theorem (x, y, z: RVec(n)) {
 	dist(x, z) <= dist(x, y) + dist(y, z)
 }
 
-theorim (x, y: RVec(n)) {
+theorem (x, y: RVec(n)) {
 	dist(x, y) >= 0
 }
 
@@ -108,11 +108,11 @@ alisa PointSeq(n) = N->RVec(n) {
 }
 
 
-theorim (a: R | x, y: RVec(n)) {
+theorem (a: R | x, y: RVec(n)) {
 	abs(a * x) => abs(a) * abs(x)
 }
 
-theorim (x, y: RVec(n)) {
+theorem (x, y: RVec(n)) {
 	abs(x + y) <= abs(x) + abs(y)
 proof:
 	target all
@@ -123,7 +123,7 @@ proof:
 	step True
 }
 
-theorim (x, y: RVec(n)) {
+theorem (x, y: RVec(n)) {
 	abs(x) >= 0
 proof:
 	step dot(x, x) >= 0

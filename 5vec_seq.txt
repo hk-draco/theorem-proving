@@ -5,7 +5,7 @@ def ConvergePointSeq(n, a) extends PointSeq(n) {
 	m >= n_0 -> dist($(m), a) < eps
 }
 
-theorim (a: ConvergePointSeq(n) | b: RVec(n)) {
+theorem (a: ConvergePointSeq(n) | b: RVec(n)) {
 	forall k: NSub(1, n)
 	a(m)(k).Converge(n(k))
 proof:
@@ -36,7 +36,7 @@ type SumConverge(s: R) extends Seq {
 	sum($).Converge
 }
 
-theorim (a: SumConverge(s), b: SumConverge(t)) { 
+theorem (a: SumConverge(s), b: SumConverge(t)) { 
 	sumInf(n->a[n]+b[n]) => s + t
 proof:
 	target context

@@ -1,6 +1,6 @@
 
 
-theorim (x: NotNeg(LessOne(R))) {
+theorem (x: NotNeg(LessOne(R))) {
 	type n->x^n: Converge(0)
 proof:
 	target all
@@ -20,7 +20,7 @@ name:
 	"発散する"
 }
 
-theorim {
+theorem {
 	(n->n).Disverge
 proof:
 	target all
